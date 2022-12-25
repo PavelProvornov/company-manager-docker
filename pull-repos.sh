@@ -4,6 +4,7 @@
 # repos for deploy
 REPOS=(
     company-manager-api
+    company-manager-frontend
 )
 
 for repo in ${REPOS[@]}; do
