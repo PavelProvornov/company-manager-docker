@@ -1,0 +1,45 @@
+version: '3.7'
+
+networks:
+  company_manager:
+    name: company_manager
+    ipam:
+      config:
+        - subnet: 172.46.0.0/16
+
+services:
+  backend:
+    container_name: backend
+    env_file:
+      - .env
+    build: 
+      context: ../backend/docker/node
+      dockerfile: Dockerfile
+    networks:
+      company_manager:
+    expose:
+      - 5000
+    volumes:
+      - ../backend/:/app
+      - /app/node_modules
+      - ../backend/docker/logs/node/:/app/logs
+    ports:
+      - 5000:5000
+      - 9229:9229
+    command: ["npm", "run", "start:dev"]
+    depends_on:
+      - postgres
+    restart: always
+    
+  postgres:
+    container_name: postgres
+    image: postgres:12
+    env_file:
+      - .env
+    environment:
+      - PG_DATA=/var/lib/postgresql/PG_DATA
+    ports:
+      - 5432:5432
+    volumes:
+      - ../backend/docker/db:/var/lib/postgresql/data
+    restart: always
