@@ -8,21 +8,21 @@ networks:
         - subnet: 172.46.0.0/16
 
 services:
-  backend:
-    container_name: backend
+  company-manager-api:
+    container_name: company-manager-api
     env_file:
       - .env
     build: 
-      context: ../backend/docker/node
+      context: ../company-manager-api/docker/node
       dockerfile: Dockerfile
     networks:
       company_manager:
     expose:
       - 5000
     volumes:
-      - ../backend/:/app
+      - ../company-manager-api/:/app
       - /app/node_modules
-      - ../backend/docker/logs/node/:/app/logs
+      - ../company-manager-api/docker/logs/node/:/app/logs
     ports:
       - 5000:5000
       - 9229:9229
@@ -41,5 +41,5 @@ services:
     ports:
       - 5432:5432
     volumes:
-      - ../backend/docker/db:/var/lib/postgresql/data
+      - ../company-manager-api/docker/db:/var/lib/postgresql/data
     restart: always
