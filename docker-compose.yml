@@ -13,8 +13,8 @@ services:
     env_file:
       - .env
     build: 
-      context: ../company-manager-api/docker/node
-      dockerfile: Dockerfile
+      context: ../company-manager-api/
+      dockerfile: ../company-manager-api/docker/node/Dockerfile
     networks:
       company_manager:
     expose:
@@ -38,6 +38,7 @@ services:
       - .env
     environment:
       - PG_DATA=/var/lib/postgresql/PG_DATA
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
     ports:
       - 5432:5432
     volumes:
