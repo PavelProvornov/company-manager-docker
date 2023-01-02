@@ -1,24 +1,13 @@
 version: '3.7'
 
-networks:
-  company_manager:
-    name: company_manager
-    ipam:
-      config:
-        - subnet: 172.46.0.0/16
-
 services:
   company-manager-api:
     container_name: company-manager-api
-    env_file:
-      - .env
     build: 
       context: ../company-manager-api/
       dockerfile: ../company-manager-api/docker/node/Dockerfile
-    networks:
-      company_manager:
-    expose:
-      - 5000
+    env_file:
+      - .env
     volumes:
       - ../company-manager-api/:/app
       - /app/node_modules
@@ -29,16 +18,18 @@ services:
     command: ["npm", "run", "start:dev"]
     depends_on:
       - postgres
-    restart: always
+    restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     
   postgres:
     container_name: postgres
     image: postgres:12
-    env_file:
-      - .env
     environment:
       - PG_DATA=/var/lib/postgresql/PG_DATA
+      - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
     ports:
       - 5432:5432
     volumes:
