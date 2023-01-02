@@ -10,12 +10,11 @@ services:
       - .env
     volumes:
       - ../company-manager-api/:/app
-      - /app/node_modules
       - ../company-manager-api/docker/logs/node/:/app/logs
     ports:
       - 5000:5000
       - 9229:9229
-    command: ["npm", "run", "start:dev"]
+    command: ["make"]
     depends_on:
       - postgres
     restart: unless-stopped
