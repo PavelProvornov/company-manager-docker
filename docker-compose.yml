@@ -34,3 +34,20 @@ services:
     volumes:
       - ../company-manager-api/docker/db:/var/lib/postgresql/data
     restart: always
+
+  company-manager-frontend:
+    container_name: company-manager-frontend
+    build:
+      context: ../company-manager-frontend/
+      dockerfile: ../company-manager-frontend/docker/Dockerfile
+    env_file:
+      - .env
+    ports:
+      - 8080:8080
+    volumes:
+      - ../company-manager-frontend/:/frontend
+    command: ["make"]
+    depends_on:
+      - company-manager-api
+    restart: unless-stopped
+    
